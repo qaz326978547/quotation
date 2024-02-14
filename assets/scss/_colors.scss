@@ -1,1 +1,5 @@
-$primary: red ;
+$blue-light: #deebf8;
+
+.bg-blue-light {
+    background: $blue-light !important;
+}
