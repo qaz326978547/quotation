@@ -20,6 +20,7 @@
               type="text"
               class="form-control"
               id="companyName"
+              v-model="data.companyName"
               placeholder="請輸入公司名稱"
             />
           </div>
@@ -29,6 +30,7 @@
               type="text"
               class="form-control"
               id="contactPerson"
+              v-model="data.contactPerson"
               placeholder="請輸入公司聯絡人"
             />
           </div>
@@ -40,6 +42,7 @@
               type="text"
               class="form-control"
               id="companyTel"
+              v-model="data.companyTel"
               placeholder="請輸入公司電話"
             />
           </div>
@@ -49,6 +52,7 @@
               type="text"
               class="form-control"
               id="companyFax"
+              v-model="data.companyFax"
               placeholder="請輸入公司傳真"
             />
           </div>
@@ -59,6 +63,7 @@
             type="text"
             class="form-control"
             id="companyMail"
+            v-model="data.companyMail"
             placeholder="請輸入E-Mail"
           />
         </div>
@@ -68,8 +73,35 @@
             type="text"
             class="form-control"
             id="companyAddress"
+            v-model="data.companyAddress"
             placeholder="請輸入公司地址"
           />
+        </div>
+        <div class="row">
+          <div class="mb-3 col-6 ">
+            <label for="quoteDate" class="form-label">報價日期</label>
+            <div>
+              <client-only>
+              <el-date-picker
+                v-model="data.quoteDate"
+                type="date"
+                id="quoteDate"
+              />
+            </client-only>
+            </div>
+          </div>
+          <div class="mb-3 col-6">
+            <label for="validDate" class="form-label">有效日期</label>
+            <div>
+              <client-only>
+              <el-date-picker
+                v-model="data.validDate"
+                type="date"
+                id="validDate"
+              />
+            </client-only>
+            </div>
+          </div>
         </div>
 
         <div class="border my-4"></div>
@@ -82,6 +114,7 @@
               type="text"
               class="form-control"
               id="clientCompanyName"
+              v-model="data.clientCompanyName"
               placeholder="請輸入客戶名稱"
             />
           </div>
@@ -91,6 +124,7 @@
               type="text"
               class="form-control"
               id="clientContactPerson"
+              v-model="data.clientContactPerson"
               placeholder="請輸入客戶聯絡人"
             />
           </div>
@@ -102,6 +136,7 @@
               type="text"
               class="form-control"
               id="clientTel"
+              v-model="data.clientTel"
               placeholder="請輸入客戶電話"
             />
           </div>
@@ -111,6 +146,7 @@
               type="text"
               class="form-control"
               id="taxIDNumber"
+              v-model="data.taxIDNumber"
               placeholder="請輸入統一編號"
             />
           </div>
@@ -121,6 +157,7 @@
             type="text"
             class="form-control"
             id="clientAddress"
+            v-model="data.clientAddress"
             placeholder="請輸入客戶地址"
           />
         </div>
@@ -132,7 +169,7 @@
           </button>
         </div>
         <div
-          class="py-3 d-flex align-items-center justify-content-center"
+          class="d-flex align-items-center justify-content-center"
           v-for="(item, index) in productList"
           :key="index"
         >
@@ -140,7 +177,7 @@
             <div class="col-12 mb-3">
               <button
                 type="button"
-                class="btn btn-outline-danger"
+                class="btn btn-outline-danger d-md-none d-block"
                 @click="removeProduct(index)"
               >
                 X
@@ -186,13 +223,13 @@
               <input
                 type="text"
                 class="form-control bg-blue-light text-secondary"
-                id="itmeSubTotal"
-                :value="itmeSubTotal[index]"
+                id="itemSubTotal"
+                :value="itemSubTotal[index]"
                 placeholder="小計"
                 readonly
               />
             </div>
-            <div class="col-1 ms-auto md-block d-none">
+            <div class="col-1 ms-auto d-md-block d-none">
               <button
                 type="button"
                 class="btn btn-outline-danger"
@@ -205,22 +242,25 @@
 
           <hr />
         </div>
-        <h3 class="text-end my-3">產品數量 : {{ itmeSubTotal.length }}</h3>
+        <h3 class="text-end my-3">產品數量 : {{ itemSubTotal.length }}</h3>
         <h3 class="text-end text-danger my-3">未稅 合計:NT${{ subTotal }}元</h3>
 
         <div class="border my-4"></div>
 
         <h2 class="text-secondary mb-4">稅率</h2>
         <div class="row mb-3">
-          <div class="mb-3 col">
+          <div class="mb-3 col-md-4 col-6">
             <input
               type="text"
               class="form-control"
               id="taxType"
+              v-model="data.taxType"
               placeholder="請輸入稅別"
             />
           </div>
-          <div class="mb-3 col">
+          <div
+            class="mb-3 d-flex justify-content-between align-items-center col-md-4 col-6"
+          >
             <input
               type="text"
               class="form-control"
@@ -228,9 +268,9 @@
               v-model="taxRate"
               placeholder="請輸入稅率"
             />
+            <span class="ps-3">%</span>
           </div>
-          %
-          <div class="mb-3 col">
+          <div class="mb-3 col-md-4">
             <input
               type="text"
               class="form-control bg-blue-light text-secondary"
@@ -246,24 +286,39 @@
         <div class="border my-4"></div>
 
         <h2 class="text-secondary mb-4">備註</h2>
-        <textarea
-          name=""
-          id=""
-          cols="10"
-          rows="3"
-          class="form-control"
-          style="resize: none"
-        >
-        </textarea>
+        <client-only>
+          <textarea
+            cols="10"
+            rows="3"
+            class="form-control"
+            v-model="data.note"
+            style="resize: none"
+          >
+          </textarea>
+        </client-only>
         <div class="border my-4"></div>
 
         <div class="d-flex justify-content-end">
-          <button type="button" class="btn btn-secondary me-3">預覽</button>
+          <button
+            type="button"
+            class="btn btn-secondary me-3"
+            @click="show = true"
+          >
+            預覽
+          </button>
           <button type="submit" class="btn btn-primary">產生報價單</button>
         </div>
       </form>
     </div>
   </div>
+
+  <PreviewModal
+    v-model="show"
+    @confirm="() => confirm()"
+    :data="data"
+    :logoImg="fileImg"
+    :productList="productList"
+  />
 </template>
 
 <script setup lang="ts">
@@ -275,8 +330,29 @@ useSeoMeta({
   ogImage: "/og-image.jpg", // Open Graph 圖片
 });
 
+type Data = {
+  companyName: string;
+  contactPerson: string;
+  companyTel: string;
+  companyFax?: string;
+  companyMail?: string;
+  companyAddress: string;
+  quoteDate: string | Date;
+  validDate?: string | Date;
+  clientCompanyName: string;
+  clientContactPerson: string;
+  clientTel: string;
+  taxIDNumber?: string;
+  clientAddress: string;
+  subTotal: number;
+  taxType: string;
+  taxRate: number;
+  taxTotal: number;
+  note?: string;
+};
+
 const fileImg = ref<null | string>(null);
-const itmeSubTotal = computed(() => {
+const itemSubTotal = computed(() => {
   return productList.value.map((item) => {
     return Number(item.price) * Number(item.quantity);
   });
@@ -294,7 +370,7 @@ const taxTotal = computed(() => {
 
 //未稅合計
 const subTotal = computed(() => {
-  return itmeSubTotal.value.reduce((acc, cur) => {
+  return itemSubTotal.value.reduce((acc, cur) => {
     return acc + Number(cur);
   }, 0);
 });
@@ -320,7 +396,15 @@ const handleFileChange = (e: Event) => {
   }
 };
 
-const productList = ref([
+
+type ProductList = {
+  name: string;
+  price: string;
+  quantity: string;
+  unit: string;
+  subTotal: string;
+}
+const productList = ref<ProductList[]>([
   {
     name: "",
     price: "",
@@ -329,6 +413,12 @@ const productList = ref([
     subTotal: "",
   },
 ]);
+
+watchEffect(() => {
+  productList.value.forEach((item, index) => {
+    item.subTotal = itemSubTotal.value[index].toString();
+  });
+});
 
 const addProduct = () => {
   productList.value.push({
@@ -343,6 +433,33 @@ const addProduct = () => {
 const removeProduct = (index: number) => {
   productList.value.splice(index, 1);
 };
+
+const data = ref<Data>({
+  companyName: "",
+  contactPerson: "",
+  companyTel: "",
+  companyFax: "",
+  companyMail: "",
+  companyAddress: "",
+  quoteDate: "",
+  validDate: "",
+  clientCompanyName: "",
+  clientContactPerson: "",
+  clientTel: "",
+  taxIDNumber: "",
+  clientAddress: "",
+  subTotal: subTotal.value,
+  taxType: "",
+  taxRate: taxRate.value,
+  taxTotal: taxTotal.value,
+  note: "",
+});
+
+const show = ref(false);
+
+function confirm() {
+  show.value = false;
+}
 </script>
 
 <style lang="scss"></style>
