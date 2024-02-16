@@ -86,11 +86,12 @@
                 v-model="data.quoteDate"
                 type="date"
                 id="quoteDate"
+                class="w-100"
               />
             </client-only>
             </div>
           </div>
-          <div class="mb-3 col-6">
+          <div class="mb-3 col-6 ">
             <label for="validDate" class="form-label">有效日期</label>
             <div>
               <client-only>
@@ -98,6 +99,7 @@
                 v-model="data.validDate"
                 type="date"
                 id="validDate"
+                class="w-100"
               />
             </client-only>
             </div>
@@ -169,11 +171,11 @@
           </button>
         </div>
         <div
-          class="d-flex align-items-center justify-content-center"
+          class="d-flex align-items-center  my-md-0 my-3 w-100"
           v-for="(item, index) in productList"
           :key="index"
         >
-          <div class="row">
+          <div class="row w-100">
             <div class="col-12 mb-3">
               <button
                 type="button"
@@ -242,8 +244,8 @@
 
           <hr />
         </div>
-        <h3 class="text-end my-3">產品數量 : {{ itemSubTotal.length }}</h3>
-        <h3 class="text-end text-danger my-3">未稅 合計:NT${{ subTotal }}元</h3>
+        <!-- <h3 class="text-end my-3">產品數量 : {{ itemSubTotal.length }}</h3> -->
+        <h3 class="text-end text-danger my-3">未稅 合計:NT${{ taxData.unTaxTotal }}元</h3>
 
         <div class="border my-4"></div>
 
@@ -254,7 +256,7 @@
               type="text"
               class="form-control"
               id="taxType"
-              v-model="data.taxType"
+              v-model="taxData.taxType"
               placeholder="請輸入稅別"
             />
           </div>
@@ -265,7 +267,7 @@
               type="text"
               class="form-control"
               id="taxRate"
-              v-model="taxRate"
+              v-model="taxData.taxRate"
               placeholder="請輸入稅率"
             />
             <span class="ps-3">%</span>
@@ -276,12 +278,12 @@
               class="form-control bg-blue-light text-secondary"
               id="taxTotal"
               placeholder="稅金"
-              :value="taxTotal"
+              :value="taxData.taxTotal"
               readonly
             />
           </div>
         </div>
-        <h3 class="text-end text-danger my-3">含稅 合計:NT${{ total }}元</h3>
+        <h3 class="text-end text-danger my-3">含稅 合計:NT${{ taxData.total }}元</h3>
 
         <div class="border my-4"></div>
 
@@ -301,12 +303,11 @@
         <div class="d-flex justify-content-end">
           <button
             type="button"
-            class="btn btn-secondary me-3"
+            class="btn btn-primary me-3"
             @click="show = true"
           >
-            預覽
+          產生報價單
           </button>
-          <button type="submit" class="btn btn-primary">產生報價單</button>
         </div>
       </form>
     </div>
@@ -318,6 +319,7 @@
     :data="data"
     :logoImg="fileImg"
     :productList="productList"
+    :taxData="taxData"
   />
 </template>
 
@@ -344,36 +346,46 @@ type Data = {
   clientTel: string;
   taxIDNumber?: string;
   clientAddress: string;
-  subTotal: number;
-  taxType: string;
-  taxRate: number;
-  taxTotal: number;
   note?: string;
 };
 
-const fileImg = ref<null | string>(null);
+
+
+const taxData =ref({
+  unTaxTotal: 0, //未稅金
+  taxType: "",
+  taxRate: 0,
+  taxTotal: 0, //稅金
+  total: 0, //含稅金
+})
+
+//產品小計
 const itemSubTotal = computed(() => {
   return productList.value.map((item) => {
     return Number(item.price) * Number(item.quantity);
   });
 });
-
-const total = computed(() => {
-  return subTotal.value + taxTotal.value;
-});
-//稅率
-const taxRate = ref<number>(0);
-//稅金
-const taxTotal = computed(() => {
-  return subTotal.value * (Number(taxRate.value) / 100);
-});
-
 //未稅合計
-const subTotal = computed(() => {
+const unTaxTotal = computed(() => {
   return itemSubTotal.value.reduce((acc, cur) => {
     return acc + Number(cur);
   }, 0);
 });
+
+
+const fileImg = ref<null | string>(null);
+
+
+const total = computed(() => {
+  return unTaxTotal.value + taxData.value.taxTotal;
+});
+
+// //稅金
+const taxTotal = computed(() => {
+  return Math.round(unTaxTotal.value * (taxData.value.taxRate / 100));
+});
+
+
 const handleFileChange = (e: Event) => {
   const target = e.target as HTMLInputElement;
   const file = target.files?.[0];
@@ -414,11 +426,7 @@ const productList = ref<ProductList[]>([
   },
 ]);
 
-watchEffect(() => {
-  productList.value.forEach((item, index) => {
-    item.subTotal = itemSubTotal.value[index].toString();
-  });
-});
+
 
 const addProduct = () => {
   productList.value.push({
@@ -435,7 +443,7 @@ const removeProduct = (index: number) => {
 };
 
 const data = ref<Data>({
-  companyName: "",
+  companyName: "DD",
   contactPerson: "",
   companyTel: "",
   companyFax: "",
@@ -448,13 +456,18 @@ const data = ref<Data>({
   clientTel: "",
   taxIDNumber: "",
   clientAddress: "",
-  subTotal: subTotal.value,
-  taxType: "",
-  taxRate: taxRate.value,
-  taxTotal: taxTotal.value,
   note: "",
 });
-
+watchEffect(() => {
+  productList.value.forEach((item, index) => {
+    item.subTotal = itemSubTotal.value[index].toString();
+  });
+  
+  taxData.value.unTaxTotal = unTaxTotal.value;
+  taxData.value.taxTotal = taxTotal.value;
+  taxData.value.total = total.value;
+ 
+});
 const show = ref(false);
 
 function confirm() {
