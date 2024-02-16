@@ -6,15 +6,8 @@ export default defineNuxtConfig({
   ],
   modules: ['@element-plus/nuxt'],
   app: {
-    baseURL: process.env.NODE_ENV === 'production' ? '/bean-quote/' : '/' ,
+    baseURL: process.env.NODE_ENV === 'production' ? '/quote/' : '/' ,
     buildAssetsDir: '/static/'
-  },
-  nitro: {
-    baseURL: "http://localhost:8000",
-    prerender: {
-      crawlLinks: true,
-      failOnError: false, 
-    },
   },
   devtools: { enabled: true }
 })
