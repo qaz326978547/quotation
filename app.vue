@@ -81,27 +81,27 @@
           <div class="mb-3 col-6 ">
             <label for="quoteDate" class="form-label">報價日期</label>
             <div>
-              <client-only>
+              <!-- <client-only>
               <el-date-picker
                 v-model="data.quoteDate"
                 type="date"
                 id="quoteDate"
                 class="w-100"
               />
-            </client-only>
+            </client-only> -->
             </div>
           </div>
           <div class="mb-3 col-6 ">
             <label for="validDate" class="form-label">有效日期</label>
             <div>
-              <client-only>
+              <!-- <client-only>
               <el-date-picker
                 v-model="data.validDate"
                 type="date"
                 id="validDate"
                 class="w-100"
               />
-            </client-only>
+            </client-only> -->
             </div>
           </div>
         </div>
