@@ -11,6 +11,7 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@popperjs/core": "npm:@sxzz/popperjs-es@^2.11.8",
     "bootstrap": "^5.3.2",
     "dayjs": "^1.11.10",
     "html2canvas": "^1.4.1",
@@ -24,7 +25,7 @@
   },
   "devDependencies": {
     "@element-plus/nuxt": "^1.0.7",
-    "element-plus": "^2.5.5",
+    "element-plus": "^2.2.2",
     "gh-pages": "^6.1.1"
   }
 }
