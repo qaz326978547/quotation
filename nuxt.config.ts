@@ -5,7 +5,6 @@ export default defineNuxtConfig({
     '@/assets/scss/app.scss',
     'vue-final-modal/style.css'
   ],
-  modules: ['@element-plus/nuxt'],
   app: {
     baseURL: process.env.NODE_ENV === 'production' ? '/quote/' : '/' ,
     buildAssetsDir: '/static/'
